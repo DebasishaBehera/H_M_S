@@ -1,0 +1,106 @@
+<div class="rooms-container">
+  <div class="rooms-ambient rooms-ambient-one" aria-hidden="true"></div>
+  <div class="rooms-ambient rooms-ambient-two" aria-hidden="true"></div>
+
+  <header class="rooms-hero">
+    <div>
+      <p class="page-label">Stay planner</p>
+      <h2>Available Rooms</h2>
+      <p class="rooms-subtitle">Search by date, narrow the list instantly, and compare room options before booking.</p>
+    </div>
+    <div class="hero-badges" aria-label="Listing status">
+      <span>Instant filters</span>
+      <span>Live inventory</span>
+    </div>
+  </header>
+
+  <div class="control-bar" *ngIf="!loading || rooms.length">
+    <div class="control-field search-field">
+      <label>Search</label>
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Room name or description" />
+    </div>
+
+    <div class="control-field small-field">
+      <label>Check-in</label>
+      <input type="date" [(ngModel)]="checkInDate" />
+    </div>
+
+    <div class="control-field small-field">
+      <label>Check-out</label>
+      <input type="date" [(ngModel)]="checkOutDate" />
+    </div>
+
+    <div class="control-field small-field">
+      <label>Room type</label>
+      <select [(ngModel)]="selectedType">
+        <option value="all">All types</option>
+        <option *ngFor="let type of roomTypes" [value]="type.toLowerCase()">{{ type }}</option>
+      </select>
+    </div>
+
+    <div class="control-field small-field">
+      <label>Sort by</label>
+      <select [(ngModel)]="sortBy">
+        <option value="recommended">Recommended</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="name">Room name</option>
+      </select>
+    </div>
+
+    <div class="control-actions">
+      <button type="button" class="action-btn primary-action" (click)="findRooms()" [disabled]="!canSearchDates">Find Rooms</button>
+      <button type="button" class="action-btn secondary-action" (click)="clearFilter()" *ngIf="checkInDate || checkOutDate">Clear Dates</button>
+      <button type="button" class="action-btn tertiary-action" (click)="clearViewFilters()" *ngIf="searchTerm || selectedType !== 'all' || sortBy !== 'recommended'">
+        Reset View
+      </button>
+    </div>
+  </div>
+
+  <div class="summary-strip" *ngIf="!loading && rooms.length">
+    <span>{{ displayedRooms.length }} rooms</span>
+    <span>Avg price ₹{{ averageRoomPrice }}</span>
+    <span>{{ hasDateFilter ? 'Date filtered results' : 'Showing all rooms' }}</span>
+  </div>
+
+  <div *ngIf="loading" class="loading">Loading rooms...</div>
+  <div *ngIf="error" class="error">{{ error }}</div>
+
+  <div class="room-grid" *ngIf="!loading && displayedRooms.length > 0">
+    <div
+      class="room-card"
+      *ngFor="let room of displayedRooms"
+      role="button"
+      tabindex="0"
+      (click)="openRoomBooking(room)"
+      (keydown.enter)="openRoomBooking(room)"
+      (keydown.space)="openRoomBooking(room); $event.preventDefault()"
+    >
+      <div class="room-media">
+        <img [src]="room.imageUrl || room.image_url || 'assets/default-room.jpg'" alt="Room image" />
+        <span class="room-badge" *ngIf="room.type">{{ room.type }}</span>
+      </div>
+      <div class="room-card-body">
+        <h3>{{ getRoomName(room) }}</h3>
+        <p class="room-description">{{ getRoomDescription(room) }}</p>
+        <p class="room-type" *ngIf="room.type">{{ room.type }} ROOM</p>
+        <div class="room-footer">
+          <div class="price-block">
+            <span class="price-label">Starting from</span>
+            <div class="price">₹{{ getRoomPrice(room) }} / night</div>
+          </div>
+          <button class="book-btn" type="button" (click)="openRoomBooking(room); $event.stopPropagation()">Book Now</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="!loading && rooms.length === 0" class="no-data">
+    No rooms available at the moment.
+  </div>
+
+  <div *ngIf="!loading && rooms.length > 0 && displayedRooms.length === 0" class="no-data">
+    No rooms match your current search or filter.
+  </div>
+</div>
