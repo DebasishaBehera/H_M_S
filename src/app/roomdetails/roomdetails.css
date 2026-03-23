@@ -1,0 +1,463 @@
+.room-details-page {
+  padding: 28px 18px 48px;
+}
+
+.room-details-container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(239, 246, 252, 0.95));
+  border-radius: 28px;
+  box-shadow: 0 26px 70px rgba(15, 76, 129, 0.14);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.back-link {
+  display: inline-flex;
+  margin-bottom: 18px;
+  color: #0d5ea2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.room-showcase {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.room-image {
+  position: relative;
+}
+
+.room-image img {
+  width: 100%;
+  border-radius: 24px;
+  object-fit: cover;
+  height: 360px;
+  box-shadow: 0 20px 44px rgba(15, 23, 42, 0.22);
+  transition: transform 0.3s ease;
+}
+
+.room-image img:hover {
+  transform: scale(1.02);
+}
+
+.room-type-badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding: 8px 13px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #0d365c;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #9a5d2b;
+}
+
+.room-info h2 {
+  color: #003566;
+  margin: 0 0 12px;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  line-height: 1.08;
+}
+
+.room-copy {
+  margin: 0 0 20px;
+  color: #4d5f72;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.room-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.stat-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(13, 94, 162, 0.08);
+  box-shadow: 0 10px 22px rgba(15, 76, 129, 0.07);
+}
+
+.stat-card span,
+.stat-card small {
+  display: block;
+}
+
+.stat-card span {
+  color: #74869a;
+  font-size: 0.8rem;
+  margin-bottom: 6px;
+}
+
+.stat-card strong {
+  color: #003566;
+  font-size: 1.2rem;
+}
+
+.stat-card small {
+  margin-top: 4px;
+  color: #74869a;
+}
+
+.booking-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 22px;
+  margin-top: 26px;
+}
+
+.booking-form-card,
+.booking-summary {
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(13, 94, 162, 0.08);
+  box-shadow: 0 16px 34px rgba(15, 76, 129, 0.08);
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.booking-form-card h3,
+.booking-summary h3 {
+  color: #003566;
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.panel-chip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eef5fb;
+  color: #0d5ea2;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  min-width: 0;
+}
+
+.date-picker-wrap {
+  position: relative;
+}
+
+.date-display {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #cfdcf0;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  text-align: left;
+  color: #0a2f52;
+  background: #ffffff;
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.date-display:hover,
+.date-display:focus-visible {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
+}
+
+.calendar-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 30;
+  width: min(320px, 100%);
+  padding: 12px;
+  border: 1px solid #cfdcf0;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 18px 34px rgba(15, 76, 129, 0.2);
+}
+
+.calendar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.calendar-head strong {
+  font-size: 0.9rem;
+  color: #0b2f53;
+}
+
+.calendar-head div {
+  display: flex;
+  gap: 6px;
+}
+
+.calendar-head button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #d9e3ee;
+  border-radius: 8px;
+  background: #f8fbff;
+  color: #0d5ea2;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.calendar-weekdays,
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 6px;
+}
+
+.calendar-weekdays span {
+  text-align: center;
+  color: #70859b;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.calendar-empty {
+  height: 34px;
+}
+
+.calendar-day {
+  height: 34px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0c355a;
+  cursor: pointer;
+  font-size: 0.84rem;
+  transition: background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.calendar-day:hover {
+  background: #edf5ff;
+  border-color: #bcd5ef;
+}
+
+.calendar-day.selected {
+  background: #0b84f3;
+  color: #ffffff;
+}
+
+.calendar-day.booked,
+.calendar-day.disabled {
+  background: #edf1f6;
+  color: #9aa8b7;
+  border-color: #e1e7ef;
+  cursor: not-allowed;
+}
+
+.field-group label {
+  margin-bottom: 6px;
+  color: #003566;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.field-group input {
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #cfdcf0;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.date-grid .field-group input[type='date'] {
+  max-width: 100%;
+}
+
+.field-group input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.16);
+}
+
+.guest-row {
+  margin-top: 18px;
+}
+
+.guest-stepper {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  gap: 10px;
+  align-items: center;
+}
+
+.guest-stepper button {
+  height: 48px;
+  border: 0;
+  border-radius: 14px;
+  background: #eef5fb;
+  color: #0d5ea2;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.guest-stepper input {
+  text-align: center;
+}
+
+.confirm-btn {
+  width: 100%;
+  margin-top: 22px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, #0b84f3, #35b7ff);
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 12px 24px rgba(11, 132, 243, 0.26);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+}
+
+.confirm-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.02);
+  box-shadow: 0 16px 30px rgba(11, 132, 243, 0.32);
+}
+
+.confirm-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  box-shadow: none;
+}
+
+.msg {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-weight: 600;
+}
+
+.msg.success {
+  background: #e8f8ef;
+  color: #1a7b49;
+}
+
+.msg.error {
+  background: #fff0ee;
+  color: #b13b2e;
+}
+
+.booking-summary {
+  align-self: start;
+}
+
+.summary-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(13, 94, 162, 0.08);
+  color: #4d5f72;
+}
+
+.summary-line strong {
+  color: #003566;
+}
+
+.total-line {
+  margin-top: 8px;
+  padding-top: 16px;
+}
+
+.summary-note {
+  margin: 18px 0 0;
+  color: #6b7d91;
+  line-height: 1.6;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 960px) {
+  .room-showcase,
+  .booking-panel,
+  .room-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .room-image img {
+    height: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .room-details-page {
+    padding: 20px 10px 34px;
+  }
+
+  .room-details-container {
+    padding: 18px;
+  }
+
+  .date-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .room-image img {
+    height: 220px;
+  }
+
+  .panel-head,
+  .summary-line,
+  .room-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

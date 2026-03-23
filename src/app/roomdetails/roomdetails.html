@@ -1,0 +1,186 @@
+<div class="room-details-page" *ngIf="!loading && room">
+  <div class="room-details-container">
+    <a routerLink="/rooms" class="back-link">Back to rooms</a>
+
+    <div class="room-showcase">
+      <div class="room-image">
+        <img [src]="room.imageUrl || 'assets/default-room.jpg'" alt="Room Image" />
+        <span class="room-type-badge" *ngIf="room.type">{{ room.type }}</span>
+      </div>
+
+      <div class="room-info">
+        <p class="eyebrow">Room details</p>
+        <h2>{{ room.name }}</h2>
+        <p class="room-copy">{{ room.description }}</p>
+
+        <div class="room-stats">
+          <div class="stat-card">
+            <span>Price</span>
+            <strong>₹{{ room.pricePerNight }}</strong>
+            <small>per night</small>
+          </div>
+          <div class="stat-card">
+            <span>Capacity</span>
+            <strong>{{ room.capacity }}</strong>
+            <small>guests max</small>
+          </div>
+          <div class="stat-card" *ngIf="room.type">
+            <span>Category</span>
+            <strong>{{ room.type }}</strong>
+            <small>room style</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-panel">
+      <div class="booking-form-card">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Reservation</p>
+            <h3>Book This Room</h3>
+          </div>
+          <span class="panel-chip">Instant estimate</span>
+        </div>
+
+        <form #bookingForm="ngForm" (ngSubmit)="bookRoom(bookingForm)">
+          <div class="date-grid">
+            <div class="field-group date-picker-wrap" (click)="$event.stopPropagation()">
+              <label>Check-in Date</label>
+              <button type="button" class="date-display" (click)="openDatePicker('checkInDate', $event)">
+                {{ formatDateDisplay(booking.checkInDate) || 'dd - mm - yyyy' }}
+              </button>
+
+              <div class="calendar-popover" *ngIf="activeDateField === 'checkInDate'">
+                <div class="calendar-head">
+                  <strong>{{ calendarMonthLabel }}</strong>
+                  <div>
+                    <button type="button" (click)="navigateMonth(-1, $event)">&#8249;</button>
+                    <button type="button" (click)="navigateMonth(1, $event)">&#8250;</button>
+                  </div>
+                </div>
+
+                <div class="calendar-weekdays">
+                  <span *ngFor="let weekday of weekDayLabels">{{ weekday }}</span>
+                </div>
+
+                <div class="calendar-days">
+                  <ng-container *ngFor="let day of calendarDays">
+                    <span *ngIf="!day" class="calendar-empty"></span>
+                    <button
+                      *ngIf="day"
+                      type="button"
+                      class="calendar-day"
+                      [class.booked]="isDateBooked(day)"
+                      [class.selected]="isDateSelected(day)"
+                      [class.disabled]="isDateDisabled(day, 'checkInDate')"
+                      [disabled]="isDateDisabled(day, 'checkInDate')"
+                      (click)="selectDate(day, $event)"
+                    >
+                      {{ day.getDate() }}
+                    </button>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <div class="field-group date-picker-wrap" (click)="$event.stopPropagation()">
+              <label>Check-out Date</label>
+              <button type="button" class="date-display" (click)="openDatePicker('checkOutDate', $event)">
+                {{ formatDateDisplay(booking.checkOutDate) || 'dd - mm - yyyy' }}
+              </button>
+
+              <div class="calendar-popover" *ngIf="activeDateField === 'checkOutDate'">
+                <div class="calendar-head">
+                  <strong>{{ calendarMonthLabel }}</strong>
+                  <div>
+                    <button type="button" (click)="navigateMonth(-1, $event)">&#8249;</button>
+                    <button type="button" (click)="navigateMonth(1, $event)">&#8250;</button>
+                  </div>
+                </div>
+
+                <div class="calendar-weekdays">
+                  <span *ngFor="let weekday of weekDayLabels">{{ weekday }}</span>
+                </div>
+
+                <div class="calendar-days">
+                  <ng-container *ngFor="let day of calendarDays">
+                    <span *ngIf="!day" class="calendar-empty"></span>
+                    <button
+                      *ngIf="day"
+                      type="button"
+                      class="calendar-day"
+                      [class.booked]="isDateBooked(day)"
+                      [class.selected]="isDateSelected(day)"
+                      [class.disabled]="isDateDisabled(day, 'checkOutDate')"
+                      [disabled]="isDateDisabled(day, 'checkOutDate')"
+                      (click)="selectDate(day, $event)"
+                    >
+                      {{ day.getDate() }}
+                    </button>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p class="booked-date-hint">
+            <span class="booked-date-dot" aria-hidden="true"></span>
+            Gray dates are already booked and cannot be selected.
+          </p>
+
+          <div class="guest-row">
+            <div class="field-group guest-field">
+              <label>Guests</label>
+              <div class="guest-stepper">
+                <button type="button" (click)="decreaseGuests()">-</button>
+                <input
+                  type="number"
+                  [(ngModel)]="booking.guests"
+                  name="guests"
+                  min="1"
+                  [max]="room.capacity"
+                  required
+                />
+                <button type="button" (click)="increaseGuests()">+</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="confirm-btn" [disabled]="!canSubmitBooking">Confirm Booking</button>
+        </form>
+
+        <p class="msg" *ngIf="message" [ngClass]="messageTone">
+          {{ message }}
+        </p>
+      </div>
+
+      <aside class="booking-summary">
+        <p class="eyebrow">Booking summary</p>
+        <h3>Your stay snapshot</h3>
+
+        <div class="summary-line">
+          <span>Nights</span>
+          <strong>{{ stayNights || 0 }}</strong>
+        </div>
+        <div class="summary-line">
+          <span>Guests</span>
+          <strong>{{ booking.guests }}</strong>
+        </div>
+        <div class="summary-line">
+          <span>Rate</span>
+          <strong>₹{{ room.pricePerNight }} / night</strong>
+        </div>
+        <div class="summary-line total-line">
+          <span>Estimated total</span>
+          <strong>₹{{ estimatedTotal || 0 }}</strong>
+        </div>
+
+        <p class="summary-note">Choose check-in and check-out dates to see the total price before confirming.</p>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loading">Loading room details...</div>
+<div *ngIf="!loading && !room" class="error">{{ message }}</div>
