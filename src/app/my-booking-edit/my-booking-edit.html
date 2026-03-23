@@ -1,0 +1,128 @@
+<section class="booking-edit-page">
+  <div class="booking-edit-shell">
+    <a routerLink="/my-bookings" class="back-link">Back to my bookings</a>
+
+    <div class="edit-card">
+      <header class="edit-hero">
+        <p class="page-kicker">User panel</p>
+        <h2>Edit booking</h2>
+        <p class="subtitle">Change your stay dates or update the number of guests for this reservation.</p>
+      </header>
+
+      <div *ngIf="loading" class="state-message">Loading booking...</div>
+
+      <form *ngIf="!loading" (ngSubmit)="updateBooking()" class="edit-form">
+        <div class="form-row">
+          <label>Room</label>
+          <input type="text" [value]="form.roomLabel" readonly />
+        </div>
+
+        <div class="form-grid">
+          <div class="form-row date-picker-wrap" (click)="$event.stopPropagation()">
+            <label>Check-in date</label>
+            <button type="button" class="date-display" (click)="openDatePicker('checkInDate', $event)">
+              {{ formatDateDisplay(form.checkInDate) || 'dd - mm - yyyy' }}
+            </button>
+
+            <div class="calendar-popover" *ngIf="activeDateField === 'checkInDate'">
+              <div class="calendar-head">
+                <strong>{{ calendarMonthLabel }}</strong>
+                <div>
+                  <button type="button" (click)="navigateMonth(-1, $event)">&#8249;</button>
+                  <button type="button" (click)="navigateMonth(1, $event)">&#8250;</button>
+                </div>
+              </div>
+
+              <div class="calendar-weekdays">
+                <span *ngFor="let weekday of weekDayLabels">{{ weekday }}</span>
+              </div>
+
+              <div class="calendar-days">
+                <ng-container *ngFor="let day of calendarDays">
+                  <span *ngIf="!day" class="calendar-empty"></span>
+                  <button
+                    *ngIf="day"
+                    type="button"
+                    class="calendar-day"
+                    [class.booked]="isDateBooked(day)"
+                    [class.selected]="isDateSelected(day)"
+                    [class.disabled]="isDateDisabled(day, 'checkInDate')"
+                    [disabled]="isDateDisabled(day, 'checkInDate')"
+                    (click)="selectDate(day, $event)"
+                  >
+                    {{ day.getDate() }}
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row date-picker-wrap" (click)="$event.stopPropagation()">
+            <label>Check-out date</label>
+            <button type="button" class="date-display" (click)="openDatePicker('checkOutDate', $event)">
+              {{ formatDateDisplay(form.checkOutDate) || 'dd - mm - yyyy' }}
+            </button>
+
+            <div class="calendar-popover" *ngIf="activeDateField === 'checkOutDate'">
+              <div class="calendar-head">
+                <strong>{{ calendarMonthLabel }}</strong>
+                <div>
+                  <button type="button" (click)="navigateMonth(-1, $event)">&#8249;</button>
+                  <button type="button" (click)="navigateMonth(1, $event)">&#8250;</button>
+                </div>
+              </div>
+
+              <div class="calendar-weekdays">
+                <span *ngFor="let weekday of weekDayLabels">{{ weekday }}</span>
+              </div>
+
+              <div class="calendar-days">
+                <ng-container *ngFor="let day of calendarDays">
+                  <span *ngIf="!day" class="calendar-empty"></span>
+                  <button
+                    *ngIf="day"
+                    type="button"
+                    class="calendar-day"
+                    [class.booked]="isDateBooked(day)"
+                    [class.selected]="isDateSelected(day)"
+                    [class.disabled]="isDateDisabled(day, 'checkOutDate')"
+                    [disabled]="isDateDisabled(day, 'checkOutDate')"
+                    (click)="selectDate(day, $event)"
+                  >
+                    {{ day.getDate() }}
+                  </button>
+                </ng-container>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="booked-date-hint">
+          <span class="booked-date-dot" aria-hidden="true"></span>
+          Gray dates are already booked and cannot be selected.
+        </p>
+
+        <div class="form-row">
+          <label>Guests</label>
+          <input
+            type="number"
+            [(ngModel)]="form.guests"
+            name="guests"
+            min="1"
+            [max]="roomCapacity || null"
+            required
+          />
+          <p class="capacity-hint" *ngIf="roomCapacity">Maximum {{ roomCapacity }} guests for this room.</p>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="primary-btn" [disabled]="!canSubmitUpdate">Save changes</button>
+          <button type="button" class="secondary-btn" (click)="goBack()">Cancel</button>
+        </div>
+      </form>
+
+      <p *ngIf="message" class="flash success">{{ message }}</p>
+      <p *ngIf="error" class="flash error">{{ error }}</p>
+    </div>
+  </div>
+</section>

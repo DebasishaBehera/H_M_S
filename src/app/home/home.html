@@ -1,0 +1,111 @@
+<div class="home-container">
+  <header class="header">
+    <div class="header-overlay">
+      <p class="badge">Welcome to</p>
+      <h1>{{ hotelName }}</h1>
+      <p class="subtitle">Comfort, elegance, and premium hospitality in every stay.</p>
+      <div class="header-actions">
+        <button class="btn-book" [routerLink]="['/rooms']">Book Now</button>
+        <button class="btn-outline" [routerLink]="['/about']">Explore More</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="features">
+    <h2>Our Facilities</h2>
+    <p class="features-subtitle">Everything you need for a relaxing and memorable getaway.</p>
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let f of features">
+        <div class="icon">{{ f.icon }}</div>
+        <h3>{{ f.title }}</h3>
+        <p>{{ f.desc }}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="stay-picker">
+    <div class="section-head">
+      <h2>Pick Your Perfect Stay</h2>
+      <p>Choose your travel mood and discover the experience built for it.</p>
+    </div>
+
+    <div class="stay-tabs">
+      <button
+        type="button"
+        *ngFor="let stay of stayOptions"
+        [class.active]="selectedStay.id === stay.id"
+        (click)="chooseStay(stay.id)"
+      >
+        {{ stay.title }}
+      </button>
+    </div>
+
+    <div class="stay-highlight-wrapper">
+      <ng-container *ngFor="let stay of stayOptions">
+        <article class="stay-highlight" *ngIf="selectedStay.id === stay.id">
+          <div class="stay-glow"></div>
+          <p class="stay-kicker">Selected Experience</p>
+          <h3>{{ stay.title }}</h3>
+          <p class="stay-tagline">{{ stay.tagline }}</p>
+          <p>{{ stay.details }}</p>
+          <a routerLink="/rooms" class="stay-cta">See matching rooms <i class="fas fa-arrow-right" style="margin-left: 8px;"></i></a>
+        </article>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="spaces">
+    <div class="section-head">
+      <h2>Spaces You Will Love</h2>
+      <p>From fitness to wellness and style, every corner is curated for comfort.</p>
+    </div>
+    <div class="spaces-grid">
+      <article class="space-card" *ngFor="let space of spaces">
+        <div class="space-icon">{{ space.icon }}</div>
+        <h3>{{ space.title }}</h3>
+        <p>{{ space.desc }}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="guest-voices">
+    <div class="section-head">
+      <h2>Guest Voices What Our Guests Say</h2>
+      <p>Real feedback from travelers, families, and business visitors.</p>
+    </div>
+
+    <div class="voices-grid">
+      <article class="voice-card" *ngFor="let item of testimonials">
+        <div class="voice-card-header">
+          <div class="voice-avatar">{{ item.name.charAt(0) }}</div>
+          <div class="voice-meta">
+            <p class="voice-name">{{ item.name }}</p>
+            <p class="voice-role">{{ item.role }}</p>
+          </div>
+        </div>
+        <p class="voice-stars">★★★★★</p>
+        <p class="voice-quote">"{{ item.quote }}"</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="section-head">
+      <h2>Help Desk Frequently Asked Questions</h2>
+      <p>Quick answers for booking, services, and your stay timeline.</p>
+    </div>
+
+    <div class="faq-list">
+      <article class="faq-item" *ngFor="let faq of faqs; let i = index" [class.open]="openFaqIndex === i">
+        <button type="button" class="faq-question" (click)="toggleFaq(i)">
+          <span>{{ faq.question }}</span>
+          <span class="faq-toggle">{{ openFaqIndex === i ? '−' : '+' }}</span>
+        </button>
+        <div class="faq-answer" *ngIf="openFaqIndex === i">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</div>

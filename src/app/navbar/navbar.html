@@ -1,0 +1,37 @@
+<nav class="navbar">
+    <div class="nav-container">
+        <a class="brand" routerLink="/home" (click)="closeMenu()" aria-label="Go to home">
+            <span class="brand-mark" aria-hidden="true">
+                <img src="images/deer-logo.svg" alt="" />
+            </span>
+            <span class="brand-copy">
+                <span class="brand-text">Grand Paradise</span>
+                <span class="brand-tag">Hotel and Resort</span>
+            </span>
+        </a>
+
+        <button
+            class="menu-toggle"
+            type="button"
+            (click)="toggleMenu()"
+            [attr.aria-expanded]="isMenuOpen"
+            aria-label="Toggle menu"
+        >
+            ☰
+        </button>
+
+        <ul class="nav-links" [class.active]="isMenuOpen">
+            <li><a routerLink="/home" routerLinkActive="active" (click)="closeMenu()">Home</a></li>
+            <li><a routerLink="/about" routerLinkActive="active" (click)="closeMenu()">About</a></li>
+            <li><a routerLink="/rooms" routerLinkActive="active" (click)="closeMenu()">Rooms</a></li>
+            <li *ngIf="isUserLoggedIn()"><a routerLink="/my-bookings" routerLinkActive="active" (click)="closeMenu()">My Bookings</a></li>
+            <li *ngIf="!isAdmin()"><a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()">Contact</a></li>
+            <li *ngIf="!isAdmin()"><a routerLink="/admin-login" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Admin</a></li>
+            <li *ngIf="isAdmin()"><a routerLink="/admin" routerLinkActive="active" class="admin-link" (click)="closeMenu()">Admin Panel</a></li>
+            <li *ngIf="!isLoggedIn()"><a routerLink="/login" routerLinkActive="active" class="pill-btn" (click)="closeMenu()">Login</a></li>
+            <li *ngIf="!isLoggedIn()"><a routerLink="/signup" routerLinkActive="active" class="pill-btn pill-highlight" (click)="closeMenu()">Signup</a></li>
+            <li *ngIf="isLoggedIn()"><a (click)="logout()" class="pill-btn">Logout</a></li>
+
+        </ul>
+    </div>
+</nav>

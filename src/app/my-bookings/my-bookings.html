@@ -1,0 +1,126 @@
+<section class="bookings-page">
+  <div class="bookings-shell">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">User panel</p>
+        <h2>My bookings</h2>
+        <p class="subtitle">Review your reservations, update dates, or cancel a booking when plans change.</p>
+      </div>
+      <a routerLink="/rooms" class="browse-link">Book another room</a>
+    </div>
+
+    <p *ngIf="message" class="flash success">{{ message }}</p>
+    <p *ngIf="error" class="flash error">{{ error }}</p>
+
+    <div class="booking-overview" *ngIf="!loading && bookings.length">
+      <div class="overview-card">
+        <span>Total bookings</span>
+        <strong>{{ bookings.length }}</strong>
+      </div>
+      <div class="overview-card">
+        <span>Upcoming</span>
+        <strong>{{ upcomingCount }}</strong>
+      </div>
+      <div class="overview-card">
+        <span>Active</span>
+        <strong>{{ activeCount }}</strong>
+      </div>
+      <div class="overview-card">
+        <span>Completed</span>
+        <strong>{{ completedCount }}</strong>
+      </div>
+    </div>
+
+    <div class="toolbar" *ngIf="!loading && bookings.length">
+      <div class="toolbar-search">
+        <label>Search</label>
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Booking id or room name" />
+      </div>
+
+      <div class="toolbar-sort">
+        <label>Sort by</label>
+        <select [(ngModel)]="sortBy">
+          <option value="latest">Latest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="checkout">Nearest checkout</option>
+        </select>
+      </div>
+
+      <button
+        type="button"
+        class="reset-btn"
+        (click)="clearFilters()"
+        *ngIf="searchTerm || selectedStatus !== 'all' || sortBy !== 'latest'"
+      >
+        Reset
+      </button>
+    </div>
+
+    <div class="status-filter" *ngIf="!loading && bookings.length">
+      <button type="button" [class.active]="selectedStatus === 'all'" (click)="setStatusFilter('all')">All</button>
+      <button type="button" [class.active]="selectedStatus === 'upcoming'" (click)="setStatusFilter('upcoming')">Upcoming</button>
+      <button type="button" [class.active]="selectedStatus === 'active'" (click)="setStatusFilter('active')">Active</button>
+      <button type="button" [class.active]="selectedStatus === 'completed'" (click)="setStatusFilter('completed')">Completed</button>
+    </div>
+
+    <div *ngIf="loading" class="state-card">Loading your bookings...</div>
+
+    <div *ngIf="!loading && !bookings.length" class="state-card empty">
+      <h3>No bookings yet</h3>
+      <p>Your reservations will appear here after you book a room.</p>
+      <a routerLink="/rooms" class="primary-link">Explore rooms</a>
+    </div>
+
+    <div *ngIf="!loading && filteredBookings.length" class="booking-grid">
+      <article class="booking-card" *ngFor="let booking of filteredBookings">
+        <div class="booking-card-head">
+          <div>
+            <p class="booking-label">Booking #{{ booking.id }}</p>
+            <h3>{{ getRoomLabel(booking) }}</h3>
+          </div>
+          <span
+            class="status-pill"
+            [class.upcoming]="getBookingStatus(booking) === 'Upcoming'"
+            [class.active]="getBookingStatus(booking) === 'Active'"
+            [class.completed]="getBookingStatus(booking) === 'Completed'"
+          >
+            {{ getBookingStatus(booking) }}
+          </span>
+        </div>
+
+        <div class="booking-meta">
+          <div>
+            <span>Check-in</span>
+            <strong>{{ booking.checkInDate | date:'mediumDate' }}</strong>
+          </div>
+          <div>
+            <span>Check-out</span>
+            <strong>{{ booking.checkOutDate | date:'mediumDate' }}</strong>
+          </div>
+          <div>
+            <span>Guests</span>
+            <strong>{{ booking.guests || 1 }}</strong>
+          </div>
+          <div>
+            <span>Stay</span>
+            <strong>{{ getBookingNights(booking) }} night{{ getBookingNights(booking) > 1 ? 's' : '' }}</strong>
+          </div>
+        </div>
+
+        <div class="booking-actions" *ngIf="getBookingStatus(booking) !== 'Completed'; else userCompletedBookingActions">
+          <button type="button" class="secondary-btn" (click)="editBooking(booking.id)">Edit</button>
+          <button type="button" class="danger-btn" (click)="cancelBooking(booking.id)">Cancel</button>
+        </div>
+        <ng-template #userCompletedBookingActions>
+          <p class="booking-label" style="color: green;">Booking Completed</p>
+        </ng-template>
+      </article>
+    </div>
+
+    <div *ngIf="!loading && bookings.length && !filteredBookings.length" class="state-card empty compact-empty">
+      <h3>No matching bookings</h3>
+      <p>Try a different search term or switch the status filter.</p>
+      <button type="button" class="primary-link action-link" (click)="clearFilters()">Reset filters</button>
+    </div>
+  </div>
+</section>
