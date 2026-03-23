@@ -1,0 +1,59 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <p class="auth-kicker">Restricted Access</p>
+    <h2>Admin Login</h2>
+    <p class="auth-subtitle">Sign in with administrator credentials to manage inventory and bookings.</p>
+
+    <form (ngSubmit)="onLogin(adminLoginForm)" #adminLoginForm="ngForm" novalidate>
+      <div class="field-group">
+        <label for="adminEmail">Admin Email</label>
+        <input
+          id="adminEmail"
+          type="email"
+          [(ngModel)]="email"
+          #emailModel="ngModel"
+          name="email"
+          placeholder="admin@example.com"
+          required
+          email
+          autocomplete="email"
+          [class.invalid]="adminLoginForm.submitted && emailModel.invalid"
+        />
+        <small class="error" *ngIf="adminLoginForm.submitted && emailModel.invalid">Please enter a valid admin email.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="adminPassword">Password</label>
+        <div class="password-field">
+          <input
+            id="adminPassword"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            #passwordModel="ngModel"
+            name="password"
+            placeholder="Enter admin password"
+            required
+            minlength="4"
+            autocomplete="current-password"
+            [class.invalid]="adminLoginForm.submitted && passwordModel.invalid"
+          />
+          <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+        <small class="error" *ngIf="adminLoginForm.submitted && passwordModel.invalid">Password must be at least 4 characters.</small>
+      </div>
+
+      <button type="submit" [disabled]="adminLoginForm.invalid || isSubmitting" class="primary-btn">
+        <span class="spinner" *ngIf="isSubmitting" aria-hidden="true"></span>
+        {{ isSubmitting ? 'Verifying...' : 'Login as Admin' }}
+      </button>
+    </form>
+
+    <p class="msg" [class.success]="message === 'Admin login successful!'" *ngIf="message">{{ message }}</p>
+
+    <p class="switch-link">
+      Not an admin? <a class="link" routerLink="/login">Login as Guest</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,222 @@
+.auth-page {
+  --accent: #0a80f6;
+  --accent-strong: #055ecf;
+  --surface: rgba(255, 255, 255, 0.92);
+  --text: #1f2937;
+  --muted: #5f6d82;
+  --danger: #d93a3a;
+  --border: #d8e0ec;
+  background: linear-gradient(rgba(6, 19, 38, 0.38), rgba(8, 30, 58, 0.3)), url('/images/bg.jpg') center/cover no-repeat fixed;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.auth-container {
+  max-width: 420px;
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 26px 60px rgba(8, 24, 48, 0.35);
+  text-align: left;
+  backdrop-filter: blur(8px);
+  animation: fade-slide-up 360ms ease-out;
+}
+
+.auth-kicker {
+  margin: 0;
+  color: #c06e2f;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.auth-container h2 {
+  margin: 10px 0 6px;
+  color: var(--text);
+  text-align: center;
+  font-size: 2rem;
+}
+
+.auth-subtitle {
+  margin: 0 0 20px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.96rem;
+  line-height: 1.45;
+}
+
+.field-group {
+  margin-bottom: 12px;
+}
+
+.field-group label {
+  display: inline-block;
+  margin-bottom: 6px;
+  color: #324357;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.auth-container input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--text);
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-container input:focus {
+  outline: none;
+  border-color: rgba(10, 128, 246, 0.85);
+  box-shadow: 0 0 0 3px rgba(10, 128, 246, 0.15);
+}
+
+.auth-container input.invalid {
+  border-color: rgba(217, 58, 58, 0.82);
+}
+
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.password-field input {
+  display: block;
+  padding-right: 76px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: auto;
+  border: 0;
+  background: transparent;
+  color: var(--accent-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.error {
+  display: block;
+  color: var(--danger);
+  margin-top: 6px;
+  min-height: 16px;
+  font-size: 0.75rem;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  background: linear-gradient(120deg, var(--accent) 0%, #0798ff 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.primary-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(10, 128, 246, 0.35);
+}
+
+.primary-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+  transform: none;
+  box-shadow: none;
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  margin-right: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  vertical-align: middle;
+  animation: spin 0.7s linear infinite;
+}
+
+.msg {
+  margin: 14px 0 8px;
+  text-align: center;
+  color: var(--danger);
+  font-weight: 600;
+  min-height: 18px;
+}
+
+.msg.success {
+  color: #18804f;
+}
+
+.switch-link {
+  text-align: center;
+  color: var(--text);
+  margin: 10px 0 0;
+}
+
+.link {
+  color: var(--accent-strong);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 620px) {
+  .auth-page {
+    padding: 14px;
+    align-items: flex-start;
+  }
+
+  .auth-container {
+    margin-top: 28px;
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+
+  .auth-container h2 {
+    font-size: 1.7rem;
+  }
+}

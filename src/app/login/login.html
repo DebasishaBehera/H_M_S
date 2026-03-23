@@ -1,0 +1,56 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <p class="auth-kicker">Welcome Back</p>
+    <h2>User Login</h2>
+    <p class="auth-subtitle">Sign in to manage your bookings and profile.</p>
+
+    <form (ngSubmit)="onLogin(loginForm)" #loginForm="ngForm" novalidate>
+      <div class="field-group">
+        <label for="loginEmail">Email</label>
+        <input
+          id="loginEmail"
+          type="email"
+          [(ngModel)]="email"
+          #emailModel="ngModel"
+          name="email"
+          placeholder="name@example.com"
+          required
+          email
+          autocomplete="email"
+          [class.invalid]="loginForm.submitted && emailModel.invalid"
+        />
+        <small class="error" *ngIf="loginForm.submitted && emailModel.invalid">Please enter a valid email address.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="loginPassword">Password</label>
+        <div class="password-field">
+          <input
+            id="loginPassword"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            #passwordModel="ngModel"
+            name="password"
+            placeholder="Enter password"
+            required
+            minlength="4"
+            autocomplete="current-password"
+            [class.invalid]="loginForm.submitted && passwordModel.invalid"
+          />
+          <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+        <small class="error" *ngIf="loginForm.submitted && passwordModel.invalid">Password must be at least 4 characters.</small>
+      </div>
+
+      <button type="submit" [disabled]="loginForm.invalid || isSubmitting" class="primary-btn">
+        <span class="spinner" *ngIf="isSubmitting" aria-hidden="true"></span>
+        {{ isSubmitting ? 'Logging in...' : 'Login' }}
+      </button>
+    </form>
+
+    <p class="msg" [class.success]="message === 'Login successful!'" *ngIf="message">{{ message }}</p>
+    <p class="switch-link">Don't have an account? <a class="link" routerLink="/signup">Signup</a></p>
+  </div>
+</div>

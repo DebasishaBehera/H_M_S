@@ -1,0 +1,73 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <p class="auth-kicker">Create Account</p>
+    <h2>User Signup</h2>
+    <p class="auth-subtitle">Join us to discover and book your perfect stay.</p>
+
+    <form (ngSubmit)="onSignup(signupForm)" #signupForm="ngForm" novalidate>
+      <div class="field-group">
+        <label for="signupName">Full Name</label>
+        <input
+          id="signupName"
+          type="text"
+          [(ngModel)]="name"
+          #nameModel="ngModel"
+          name="name"
+          placeholder="Your full name"
+          required
+          minlength="2"
+          autocomplete="name"
+          [class.invalid]="signupForm.submitted && nameModel.invalid"
+        />
+        <small class="error" *ngIf="signupForm.submitted && nameModel.invalid">Name must be at least 2 characters.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="signupEmail">Email</label>
+        <input
+          id="signupEmail"
+          type="email"
+          [(ngModel)]="email"
+          #emailModel="ngModel"
+          name="email"
+          placeholder="name@example.com"
+          required
+          email
+          autocomplete="email"
+          [class.invalid]="signupForm.submitted && emailModel.invalid"
+        />
+        <small class="error" *ngIf="signupForm.submitted && emailModel.invalid">Please enter a valid email address.</small>
+      </div>
+
+      <div class="field-group">
+        <label for="signupPassword">Password</label>
+        <div class="password-field">
+          <input
+            id="signupPassword"
+            [type]="showPassword ? 'text' : 'password'"
+            [(ngModel)]="password"
+            #passwordModel="ngModel"
+            name="password"
+            placeholder="Create password"
+            required
+            minlength="4"
+            autocomplete="new-password"
+            [class.invalid]="signupForm.submitted && passwordModel.invalid"
+          />
+          <button type="button" class="password-toggle" (click)="togglePasswordVisibility()">
+            {{ showPassword ? 'Hide' : 'Show' }}
+          </button>
+        </div>
+        <small class="error" *ngIf="signupForm.submitted && passwordModel.invalid">Password must be at least 4 characters.</small>
+      </div>
+
+      <button type="submit" [disabled]="signupForm.invalid || isSubmitting" class="primary-btn">
+        <span class="spinner" *ngIf="isSubmitting" aria-hidden="true"></span>
+        {{ isSubmitting ? 'Creating account...' : 'Signup' }}
+      </button>
+    </form>
+
+    <p class="msg" *ngIf="message">{{ message }}</p>
+    <p class="switch-link">Already have an account? <a class="link" routerLink="/login">Login</a></p>
+  </div>
+</div>

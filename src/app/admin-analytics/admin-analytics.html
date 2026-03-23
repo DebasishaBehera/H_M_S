@@ -1,0 +1,264 @@
+<div class="admin-container analytics-shell">
+  <div class="analytics-ambient analytics-ambient-one" aria-hidden="true"></div>
+  <div class="analytics-ambient analytics-ambient-two" aria-hidden="true"></div>
+
+  <section class="analytics-hero">
+    <div>
+      <p class="hero-eyebrow">Business intelligence</p>
+      <h2 style="text-align: left;">Hotel growth and profit view</h2>
+      <p class="subtitle hero-copy">
+        Live admin analytics built only from your existing rooms and bookings data. No backend changes required.
+      </p>
+    </div>
+
+    <div class="hero-meta">
+      <a class="hero-link" routerLink="/admin">Back to admin panel</a>
+      <span class="hero-chip">{{ rooms.length }} rooms tracked</span>
+      <span class="hero-chip">{{ bookings.length }} bookings analyzed</span>
+    </div>
+  </section>
+
+  <div *ngIf="loading" class="loading-state">Loading business metrics...</div>
+  <p *ngIf="!loading && error" class="error">{{ error }}</p>
+
+  <ng-container *ngIf="!loading && !error">
+    <section class="metric-grid">
+      <article class="metric-card warm">
+        <p class="metric-label">Booked revenue</p>
+        <h3>{{ formatCurrency(totalRevenue) }}</h3>
+        <p class="metric-note">Revenue reconstructed from existing booking dates and room prices.</p>
+      </article>
+
+      <article class="metric-card sky">
+        <p class="metric-label">Occupancy this month</p>
+        <h3>{{ currentMonthOccupancy | number:'1.0-1' }}%</h3>
+        <p class="metric-note">{{ currentMonthBookedNights }} booked nights across current inventory.</p>
+      </article>
+
+      <article class="metric-card mint">
+        <p class="metric-label">Growth vs last month</p>
+        <h3>{{ growthLabel }}</h3>
+        <p class="metric-note">{{ growthNarrative }}</p>
+      </article>
+
+      <article class="metric-card blush" [class.negative]="profitLossTone === 'negative'">
+        <p class="metric-label">{{ profitLossLabel }}</p>
+        <h3>{{ formatSignedCurrency(revenueDelta) }}</h3>
+        <p class="metric-note">Estimate uses month-over-month revenue movement because expense data is unavailable.</p>
+      </article>
+    </section>
+
+    <section class="analytics-grid">
+      <article class="panel chart-panel panel-wide">
+        <div class="panel-header-row">
+          <div>
+            <p class="panel-kicker">Growth graph</p>
+            <h3>{{ chartTitle }}</h3>
+          </div>
+          <p class="panel-subtitle">{{ chartSubtitle }}</p>
+        </div>
+
+        <div class="chart-toggle" role="tablist" aria-label="Analytics chart mode">
+          <button type="button" class="chart-toggle-button" [class.active]="chartMode === 'past'" (click)="setChartMode('past')">
+            Past 6 months
+          </button>
+          <button type="button" class="chart-toggle-button" [class.active]="chartMode === 'upcoming'" (click)="setChartMode('upcoming')">
+            Upcoming booked months
+          </button>
+        </div>
+
+        <div class="chart-shell" *ngIf="monthlySnapshots.length; else noRevenueData">
+          <svg viewBox="0 0 620 220" class="line-chart" preserveAspectRatio="none" aria-label="Revenue trend chart">
+            <g *ngFor="let axis of chartAxisLabels">
+              <text x="4" [attr.y]="axis.y + 4" class="chart-axis-label">{{ formatCurrency(axis.value, true) }}</text>
+            </g>
+            <line x1="22" y1="190" x2="598" y2="190" class="chart-axis"></line>
+            <line x1="22" y1="50" x2="598" y2="50" class="chart-grid"></line>
+            <line x1="22" y1="95" x2="598" y2="95" class="chart-grid"></line>
+            <line x1="22" y1="140" x2="598" y2="140" class="chart-grid"></line>
+            <polygon [attr.points]="revenueAreaPoints" class="chart-area"></polygon>
+            <polyline [attr.points]="revenueChartPoints" class="chart-line"></polyline>
+            <g *ngFor="let dot of revenueDots">
+              <title>{{ dot.label }}: {{ formatCurrency(dot.value) }} revenue, {{ dot.bookedNights }} booked nights</title>
+              <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="5" class="chart-dot"></circle>
+            </g>
+          </svg>
+
+          <div class="chart-labels">
+            <div class="chart-label" *ngFor="let snapshot of monthlySnapshots">
+              <span>{{ snapshot.label }}</span>
+              <strong>{{ formatCurrency(snapshot.revenue, true) }}</strong>
+              <small>{{ snapshot.bookedNights }} nights</small>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noRevenueData>
+          <p class="empty-state">No bookings are available yet, so the growth chart will populate after reservations start coming in.</p>
+        </ng-template>
+      </article>
+
+      <article class="panel gauge-panel">
+        <div class="panel-header-row compact">
+          <div>
+            <p class="panel-kicker">Commercial health</p>
+            <h3>Occupancy and yield</h3>
+          </div>
+        </div>
+
+        <div class="gauge-wrap">
+          <div class="gauge-ring" [style.background]="occupancyGaugeStyle">
+            <div class="gauge-inner">
+              <span>{{ currentMonthOccupancy | number:'1.0-0' }}%</span>
+              <small>occupied</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="micro-stats">
+          <div>
+            <span>ADR</span>
+            <strong>{{ formatCurrency(averageDailyRate) }}</strong>
+          </div>
+          <div>
+            <span>Avg stay</span>
+            <strong>{{ averageStayLength | number:'1.1-1' }} nights</strong>
+          </div>
+          <div>
+            <span>Guests served</span>
+            <strong>{{ totalGuests }}</strong>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel profit-panel" [class.negative]="profitLossTone === 'negative'">
+        <div class="panel-header-row compact">
+          <div>
+            <p class="panel-kicker">Profit or loss</p>
+            <h3>{{ performanceStatus }}</h3>
+          </div>
+          <span class="trend-pill" [class.negative]="profitLossTone === 'negative'">{{ growthLabel }}</span>
+        </div>
+
+        <p class="profit-copy">{{ performanceNarrative }}</p>
+
+        <div class="profit-band">
+          <div class="profit-fill" [style.width.%]="profitLossMeterWidth"></div>
+        </div>
+
+        <div class="profit-values">
+          <span>Previous month: {{ formatCurrency(previousMonthRevenue, true) }}</span>
+          <strong>Now: {{ formatCurrency(currentMonthRevenue, true) }}</strong>
+        </div>
+      </article>
+
+      <article class="panel room-panel panel-wide">
+        <div class="panel-header-row">
+          <div>
+            <p class="panel-kicker">Top performers</p>
+            <h3>Rooms driving the most revenue</h3>
+          </div>
+          <p class="panel-subtitle">Based on all currently available booking history.</p>
+        </div>
+
+        <div class="room-bars" *ngIf="roomPerformance.length; else noRoomRevenue">
+          <div class="room-bar" *ngFor="let room of roomPerformance">
+            <div class="room-bar-head">
+              <span>{{ room.name }}</span>
+              <strong>{{ formatCurrency(room.revenue, true) }}</strong>
+            </div>
+
+            <div class="room-track">
+              <div class="room-fill" [style.width.%]="room.share"></div>
+            </div>
+
+            <div class="room-bar-foot">
+              <span>{{ room.bookings }} bookings</span>
+              <span>{{ room.nights }} nights</span>
+              <span>{{ room.share | number:'1.0-1' }}% of revenue</span>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noRoomRevenue>
+          <p class="empty-state">Room performance will appear here as soon as booking history is available.</p>
+        </ng-template>
+      </article>
+
+      <article class="panel insights-panel">
+        <div class="panel-header-row compact">
+          <div>
+            <p class="panel-kicker">Business logic</p>
+            <h3>What the data says</h3>
+          </div>
+        </div>
+
+        <ul class="signal-list">
+          <li *ngFor="let signal of strategicSignals">{{ signal }}</li>
+        </ul>
+      </article>
+
+      <article class="panel patterns-panel panel-wide">
+        <div class="panel-header-row">
+          <div>
+            <p class="panel-kicker">Guest behavior</p>
+            <h3>Booking and stay patterns</h3>
+          </div>
+          <p class="panel-subtitle">Calculated dynamically from reservation check-ins and lengths of stay.</p>
+        </div>
+
+        <div class="patterns-grid">
+          <div class="pattern-block">
+            <h4>Check-in day volume</h4>
+            <div class="days-chart">
+              <div class="day-col" *ngFor="let d of checkInDays">
+                <span class="day-count" [style.opacity]="d.count ? 1 : 0">{{ d.count }}</span>
+                <div class="day-bar-wrap">
+                  <div class="day-bar" [style.height.%]="d.percent" [class.peak]="d.fullName === peakCheckInDay"></div>
+                </div>
+                <span class="day-label" [class.peak-text]="d.fullName === peakCheckInDay">{{ d.day }}</span>
+              </div>
+            </div>
+            <p class="pattern-note" *ngIf="peakCheckInDay !== 'N/A'">
+              <strong>{{ peakCheckInDay }}</strong> sees the most arrivals.
+            </p>
+          </div>
+
+          <div class="pattern-block">
+            <h4>Length of stay distribution</h4>
+            
+            <div class="duration-item">
+              <div class="duration-label">
+                <span>Short stay <small>(1-2 nights)</small></span>
+                <span>{{ stayDurationProfile.short.count }} {{ stayDurationProfile.short.count === 1 ? 'booking' : 'bookings' }}</span>
+              </div>
+              <div class="duration-track">
+                <div class="duration-fill short-fill" [style.width.%]="stayDurationProfile.short.percent"></div>
+              </div>
+            </div>
+
+            <div class="duration-item">
+              <div class="duration-label">
+                <span>Medium stay <small>(3-4 nights)</small></span>
+                <span>{{ stayDurationProfile.medium.count }} {{ stayDurationProfile.medium.count === 1 ? 'booking' : 'bookings' }}</span>
+              </div>
+              <div class="duration-track">
+                <div class="duration-fill mid-fill" [style.width.%]="stayDurationProfile.medium.percent"></div>
+              </div>
+            </div>
+
+            <div class="duration-item">
+              <div class="duration-label">
+                <span>Extended stay <small>(5+ nights)</small></span>
+                <span>{{ stayDurationProfile.long.count }} {{ stayDurationProfile.long.count === 1 ? 'booking' : 'bookings' }}</span>
+              </div>
+              <div class="duration-track">
+                <div class="duration-fill long-fill" [style.width.%]="stayDurationProfile.long.percent"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </ng-container>
+</div>
