@@ -1,0 +1,120 @@
+<div class="admin-container admin-bookings-shell admin-data-shell" style="max-width: 1450px">
+  <div class="admin-shell-ambient admin-shell-ambient-one" aria-hidden="true"></div>
+  <div class="admin-shell-ambient admin-shell-ambient-two" aria-hidden="true"></div>
+
+  <header class="admin-shell-header">
+    <div>
+      <p class="page-label">Reservations desk</p>
+      <h2>Room Bookings</h2>
+      <p class="subtitle">Search, review, edit, and cancel bookings from one place.</p>
+    </div>
+    <div class="header-badges" aria-label="Booking panel status">
+      <span>Live filters</span>
+      <span>Admin only</span>
+    </div>
+  </header>
+
+  <div class="overview-grid" *ngIf="!loadingBookings && bookings.length">
+    <div class="overview-card">
+      <span>Total bookings</span>
+      <strong>{{ bookings.length }}</strong>
+    </div>
+    <div class="overview-card">
+      <span>Upcoming</span>
+      <strong>{{ upcomingCount }}</strong>
+    </div>
+    <div class="overview-card">
+      <span>Active</span>
+      <strong>{{ activeCount }}</strong>
+    </div>
+    <div class="overview-card">
+      <span>Total guests</span>
+      <strong>{{ totalGuests }}</strong>
+    </div>
+  </div>
+
+  <div class="toolbar" *ngIf="!loadingBookings && bookings.length">
+    <div class="toolbar-field search-field">
+      <label>Search</label>
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Booking id, room, or user" />
+    </div>
+
+    <div class="toolbar-field">
+      <label>Sort by</label>
+      <select [(ngModel)]="sortBy">
+        <option value="latest">Latest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="checkout">Nearest checkout</option>
+      </select>
+    </div>
+
+    <button type="button" class="reset-btn" *ngIf="searchTerm || selectedStatus !== 'all' || sortBy !== 'latest'" (click)="clearFilters()">
+      Reset
+    </button>
+  </div>
+
+  <div class="status-filter" *ngIf="!loadingBookings && bookings.length">
+    <button type="button" [class.active]="selectedStatus === 'all'" (click)="setStatusFilter('all')">All</button>
+    <button type="button" [class.active]="selectedStatus === 'upcoming'" (click)="setStatusFilter('upcoming')">Upcoming</button>
+    <button type="button" [class.active]="selectedStatus === 'active'" (click)="setStatusFilter('active')">Active</button>
+    <button type="button" [class.active]="selectedStatus === 'completed'" (click)="setStatusFilter('completed')">Completed</button>
+  </div>
+
+  <div class="panels">
+    <section class="panel">
+
+      <div *ngIf="loadingBookings" class="info">Loading bookings...</div>
+
+      <div class="booking-card-grid" *ngIf="!loadingBookings && filteredBookings.length">
+        <article class="admin-booking-card" *ngFor="let booking of filteredBookings">
+          <div class="booking-card-top">
+            <div>
+              <p class="booking-id">Booking #{{ booking.id }}</p>
+              <h3>{{ getRoomLabel(booking) }}</h3>
+            </div>
+            <span class="status-pill" [class.upcoming]="getBookingStatus(booking) === 'Upcoming'" [class.active]="getBookingStatus(booking) === 'Active'" [class.completed]="getBookingStatus(booking) === 'Completed'">
+              {{ getBookingStatus(booking) }}
+            </span>
+          </div>
+
+          <p class="booking-user">{{ getUserLabel(booking) }}</p>
+
+          <div class="booking-meta-grid">
+            <div>
+              <span>Check-in</span>
+              <strong>{{ booking.checkInDate | date:'mediumDate' }}</strong>
+            </div>
+            <div>
+              <span>Check-out</span>
+              <strong>{{ booking.checkOutDate | date:'mediumDate' }}</strong>
+            </div>
+            <div>
+              <span>Guests</span>
+              <strong>{{ booking.guests }}</strong>
+            </div>
+          </div>
+
+          <div *ngIf="getBookingStatus(booking) !== 'Completed'; else adminCompletedBookingActions">
+            <div class="card-divider"></div>
+            <div class="row-actions card-actions">
+              <button (click)="editBooking(booking.id)">Edit</button>
+              <button class="danger" (click)="deleteBooking(booking.id)">Cancel</button>
+            </div>
+          </div>
+          <ng-template #adminCompletedBookingActions>
+            <p class="booking-user" style="color: green;">Booking Completed</p>
+          </ng-template>
+        </article>
+      </div>
+
+      <div *ngIf="!loadingBookings && bookings.length && !filteredBookings.length" class="info empty-state">
+        No bookings match your current search or filter.
+      </div>
+
+      <div *ngIf="!loadingBookings && !bookings.length" class="info">No bookings found.</div>
+    </section>
+  </div>
+
+  <p class="msg" *ngIf="message">{{ message }}</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+</div>

@@ -1,0 +1,88 @@
+<button
+  type="button"
+  class="chat-toggle"
+  [class.open]="isOpen"
+  (click)="toggleChat()"
+  [attr.aria-label]="isOpen ? 'Close support chat' : 'Open support chat'"
+>
+  <span class="chat-toggle-icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" role="img" aria-label="Chatbot logo">
+      <rect x="4" y="6" width="16" height="12" rx="6"></rect>
+      <circle cx="9" cy="12" r="1.3"></circle>
+      <circle cx="15" cy="12" r="1.3"></circle>
+      <path d="M10 15.2h4"></path>
+      <path d="M12 3.5v2.2"></path>
+    </svg>
+  </span>
+  <span class="chat-toggle-text">ChatBot</span>
+  <span class="chat-ping" aria-hidden="true"></span>
+</button>
+
+<section class="chat-panel" *ngIf="isOpen" aria-label="Support chat">
+  <header class="chat-header">
+    <button type="button" class="close-btn" (click)="toggleChat()" aria-label="Close chat">&times;</button>
+    <div class="chat-brand-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <rect x="4" y="6" width="16" height="12" rx="6"></rect>
+        <circle cx="9" cy="12" r="1.3"></circle>
+        <circle cx="15" cy="12" r="1.3"></circle>
+        <path d="M10 15.2h4"></path>
+        <path d="M12 3.5v2.2"></path>
+      </svg>
+    </div>
+    <div class="header-text">
+      <h3>Hotel Support</h3>
+      <p>Quick help for booking and account issues</p>
+    </div>
+  </header>
+
+  <div class="chat-body" #chatBody>
+    <div class="day-separator">Today</div>
+
+    <article
+      class="message"
+      *ngFor="let item of messages"
+      [class.user]="item.sender === 'user'"
+      [class.bot]="item.sender === 'bot'"
+    >
+      <p>{{ item.text }}</p>
+
+      <div class="product-preview" *ngIf="item.productPreview && item.sender === 'bot'">
+        <img [src]="item.productPreview.imageUrl" alt="Room preview" />
+        <div class="preview-content">
+          <h4>{{ item.productPreview.title }}</h4>
+          <p>{{ item.productPreview.subtitle }}</p>
+          <span>{{ item.productPreview.priceText }}</span>
+        </div>
+      </div>
+
+      <div class="option-list" *ngIf="item.options?.length && item.sender === 'bot'">
+        <button type="button" class="option-btn" *ngFor="let option of item.options" (click)="ask(option)">
+          <span>{{ option.label }}</span>
+          <span class="option-arrow">&gt;</span>
+        </button>
+      </div>
+
+      <time>{{ item.time }}</time>
+    </article>
+
+    <article class="message typing" *ngIf="isTyping">
+      <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </article>
+  </div>
+
+  <form class="chat-composer" (ngSubmit)="sendTypedMessage()">
+    <input
+      type="text"
+      name="chatMessage"
+      [(ngModel)]="inputText"
+      placeholder="Write a message..."
+      autocomplete="off"
+    />
+    <button type="submit" aria-label="Send message">&gt;</button>
+  </form>
+</section>

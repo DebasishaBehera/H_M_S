@@ -1,0 +1,110 @@
+<div class="admin-container admin-room-create-shell">
+  <div class="create-ambient create-ambient-one" aria-hidden="true"></div>
+  <div class="create-ambient create-ambient-two" aria-hidden="true"></div>
+
+  <header class="create-hero">
+    <div>
+      <p class="page-kicker">Inventory Desk</p>
+      <h2>Admin Panel - List New Room</h2>
+      <p class="subtitle">Add a room with a cleaner form and an instant preview before saving.</p>
+    </div>
+    <div class="create-hero-meta" aria-label="Form status">
+      <span>Live preview</span>
+      <span>Smart form</span>
+    </div>
+  </header>
+
+  <div class="create-layout">
+    <section class="panel create-panel">
+      <div class="panel-heading">
+        <div>
+          <h3>Room Management</h3>
+          <p class="panel-subtitle">Fill the details below and publish the room when it looks right.</p>
+        </div>
+        <span class="draft-chip">{{ roomForm.id ? 'Editing' : 'Draft' }}</span>
+      </div>
+
+      <form (ngSubmit)="saveRoom()" class="room-form">
+        <div class="form-row">
+          <label>Name</label>
+          <input type="text" [(ngModel)]="roomForm.name" name="name" placeholder="Enter room name" required />
+        </div>
+
+        <div class="form-row">
+          <div class="field-top">
+            <label>Description</label>
+            <span>{{ roomForm.description.length || 0 }}/220</span>
+          </div>
+          <textarea [(ngModel)]="roomForm.description" name="description" rows="3" maxlength="220" placeholder="Describe the room, atmosphere, and guest experience"></textarea>
+        </div>
+
+        <div class="form-row-inline compact-row">
+          <div>
+            <label>Price / Night</label>
+            <input type="number" [(ngModel)]="roomForm.pricePerNight" name="pricePerNight" min="0" required />
+          </div>
+          <div>
+            <label>Capacity</label>
+            <input type="number" [(ngModel)]="roomForm.capacity" name="capacity" min="1" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field-top">
+            <label>Room Type</label>
+            <span>{{ roomForm.type }}</span>
+          </div>
+          <div class="type-switcher">
+            <button type="button" [class.active]="roomForm.type === 'SINGLE'" (click)="roomForm.type = 'SINGLE'">Single</button>
+            <button type="button" [class.active]="roomForm.type === 'DOUBLE'" (click)="roomForm.type = 'DOUBLE'">Double</button>
+            <button type="button" [class.active]="roomForm.type === 'KING'" (click)="roomForm.type = 'KING'">King</button>
+            <button type="button" [class.active]="roomForm.type === 'SUITE'" (click)="roomForm.type = 'SUITE'">Suite</button>
+          </div>
+        </div>
+
+        <div class="form-row upload-field">
+          <label>Room Image</label>
+          <input #roomImageInput type="file" accept="image/*" (change)="onRoomImageSelected($event)" />
+          <div class="upload-note">
+            <small *ngIf="uploadingImage" class="info">Uploading image...</small>
+            <small *ngIf="roomForm.imageUrl && !uploadingImage" class="info">Image uploaded successfully.</small>
+            <small *ngIf="imageUploadError" class="error">{{ imageUploadError }}</small>
+          </div>
+        </div>
+
+        <div class="actions create-actions">
+          <button type="submit" [disabled]="uploadingImage || !roomForm.name.trim() || roomForm.pricePerNight <= 0 || roomForm.capacity < 1 || !roomForm.imageUrl">
+            {{ roomForm.id ? 'Update Room' : 'Add Room' }}
+          </button>
+          <button type="button" class="secondary" (click)="resetRoomForm()">Reset Form</button>
+        </div>
+      </form>
+    </section>
+
+    <aside class="preview-panel">
+      <p class="preview-kicker">Live Preview</p>
+      <article class="preview-card">
+        <img [src]="roomForm.imageUrl || 'assets/default-room.jpg'" alt="Room preview" />
+        <div class="preview-body">
+          <span class="preview-type">{{ roomForm.type || 'ROOM' }}</span>
+          <h3>{{ roomForm.name || 'Room name preview' }}</h3>
+          <p>{{ roomForm.description || 'Room description preview will appear here as you type.' }}</p>
+
+          <div class="preview-meta">
+            <div>
+              <span>Price</span>
+              <strong>{{ roomForm.pricePerNight > 0 ? ('₹' + roomForm.pricePerNight + ' / night') : 'Add price' }}</strong>
+            </div>
+            <div>
+              <span>Capacity</span>
+              <strong>{{ roomForm.capacity }} guests</strong>
+            </div>
+          </div>
+        </div>
+      </article>
+    </aside>
+  </div>
+
+  <p class="msg" *ngIf="message">{{ message }}</p>
+  <p class="error" *ngIf="error">{{ error }}</p>
+</div>
