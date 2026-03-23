@@ -1,0 +1,78 @@
+<div class="admin-container admin-dashboard-shell">
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="dashboard-hero">
+    <div>
+      <p class="hero-kicker">Command Center</p>
+      <h2>Admin Panel</h2>
+      <p class="subtitle">Manage rooms, bookings, and performance from one polished workspace.</p>
+    </div>
+
+    <div class="hero-health" aria-label="System status">
+      <span class="health-pill online">System Online</span>
+      <span class="health-pill">Live Updates</span>
+    </div>
+  </header>
+
+  <section class="overview-strip" aria-label="Quick metrics">
+    <article class="overview-item">
+      <span>Room Inventory</span>
+      <strong>Catalog</strong>
+    </article>
+    <article class="overview-item">
+      <span>Reservations</span>
+      <strong>Active Flow</strong>
+    </article>
+    <article class="overview-item">
+      <span>Guest Demand</span>
+      <strong>Track Trend</strong>
+    </article>
+    <article class="overview-item">
+      <span>Business Health</span>
+      <strong>Insight Ready</strong>
+    </article>
+  </section>
+
+  <div class="dashboard-grid">
+    <a class="dashboard-card" [routerLink]="['/admin/new-room']" aria-label="List new room">
+      <div class="card-top">
+        <span class="card-number">01</span>
+        <span class="card-chip">Create</span>
+      </div>
+      <h3>List New Room</h3>
+      <p>Create a new room and set price, capacity, and image in a guided workflow.</p>
+      <span class="card-cta">Open module</span>
+    </a>
+
+    <a class="dashboard-card" [routerLink]="['/admin/bookings']" aria-label="Open room bookings">
+      <div class="card-top">
+        <span class="card-number">02</span>
+        <span class="card-chip">Manage</span>
+      </div>
+      <h3>Room Bookings</h3>
+      <p>Review every reservation, verify dates, and handle cancellations with clarity.</p>
+      <span class="card-cta">Review bookings</span>
+    </a>
+
+    <a class="dashboard-card" [routerLink]="['/admin/rooms']" aria-label="View all rooms">
+      <div class="card-top">
+        <span class="card-number">03</span>
+        <span class="card-chip">Control</span>
+      </div>
+      <h3>View All Rooms</h3>
+      <p>Maintain the full room catalog, update details, and remove outdated entries.</p>
+      <span class="card-cta">Manage inventory</span>
+    </a>
+
+    <a class="dashboard-card analytics-card" [routerLink]="['/admin/analytics']" aria-label="Open business analytics">
+      <div class="card-top">
+        <span class="card-number">04</span>
+        <span class="card-chip">Insights</span>
+      </div>
+      <h3>Business Analytics</h3>
+      <p>Track occupancy, revenue, and growth patterns to make faster strategic decisions.</p>
+      <span class="card-cta">Explore analytics</span>
+    </a>
+  </div>
+</div>
